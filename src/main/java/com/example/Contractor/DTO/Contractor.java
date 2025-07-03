@@ -48,6 +48,8 @@ public class Contractor {
         this.orgForm = orgForm;
     }
 
+    public Contractor() {}
+
     /**
      * Creates full initialized instance.
      *

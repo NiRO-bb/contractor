@@ -5,6 +5,8 @@ import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.DTO.OrgForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,8 @@ import java.util.List;
  */
 @Repository
 public class ContractorRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContractorRepository.class);
 
     private static final int PAGE_SIZE = 10;
 
@@ -70,6 +74,7 @@ public class ContractorRepository {
             ps.setString(16, contractor.getCountry());
             ps.setInt(17, contractor.getIndustry());
             ps.setInt(18, contractor.getOrgForm());
+            LOGGER.info("Saved the contractor with id = {}.", contractor.getId());
             return ps;
         });
     }
@@ -84,6 +89,7 @@ public class ContractorRepository {
      * @return coupled data - if request was successful, {@code null} - else
      */
     public List<Object> get(String id) {
+        LOGGER.info("Getting the contractor by id = {}.", id);
         String sql = """
                 SELECT contractor.*,
                 country.id AS c_id, country.name AS c_name, country.is_active AS c_active,
@@ -128,9 +134,12 @@ public class ContractorRepository {
                         rs.getString("of_name"),
                         rs.getBoolean("of_active")
                 );
+                LOGGER.info("Successful receiving of contractor {} with following {}, {}, {}.",
+                        contractor, country, industry, orgForm);
                 return List.of(contractor, country, industry, orgForm);
             }, id);
         } catch (EmptyResultDataAccessException exception) {
+            LOGGER.info("Contractor with id = {} not exist.", id);
             return null;
         }
     }
@@ -147,6 +156,7 @@ public class ContractorRepository {
         return this.jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement("UPDATE contractor SET is_active=false WHERE id=?");
             ps.setString(1, id);
+            LOGGER.info("Deleted contractor with id = {}.", id);
             return ps;
         });
     }
@@ -164,6 +174,7 @@ public class ContractorRepository {
      * returned instances count will be no more than page size
      */
     public List<Contractor> search(ContractorSearch contractorSearch, int page) {
+        LOGGER.info("Searching by {} and page number = {}", contractorSearch, page);
         String sql = """
                 SELECT *
                 FROM contractor
@@ -204,7 +215,7 @@ public class ContractorRepository {
                 rs.getString("modify_user_id"),
                 rs.getBoolean("is_active")
         ));
-
+        LOGGER.info("Found {} contractor(s).", contractors.size());
         return contractors;
     }
 
