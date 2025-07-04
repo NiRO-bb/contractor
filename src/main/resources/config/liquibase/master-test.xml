@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="changelog/V1__create_country_table.xml" relativeToChangelogFile="false"/>
+    <include file="changelog/V2__create_industry_table.xml" relativeToChangelogFile="false"/>
+    <include file="changelog/V3__create_org_form_table.xml" relativeToChangelogFile="false"/>
+    <include file="changelog/V4__create_contractor_table.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>
