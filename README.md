@@ -13,6 +13,7 @@ This project provides interaction methods for <i>contractors</i>.
 ```shell
 git clone https://github.com/NiRO-bb/contractor.git
 ```
+
 2. Build with Maven <p>
    <b>Below just a pattern!</b>
    You <b>must</b> replace the following:
@@ -21,7 +22,7 @@ git clone https://github.com/NiRO-bb/contractor.git
 * `<username>` with name of user who has access to specified database
 * `<password>` with password of specified user
 ```shell
-mvn clean install 
+mvn clean package 
 "-Dspring.datasource.url=jdbc:postgresql://localhost:<port>/<database1>"
 "-Dspring.datasource.username=<username>" 
 "-Dspring.datasource.password=<password>" 
@@ -29,6 +30,15 @@ mvn clean install
 Do not use the same database for testing and usage.
 The application cleans up your database during testing.
 It is better to use a completely new database (for testing). 
+
+3. Complete rewriting data files.
+   Some data files that used during DB migration can be written in invalid format.
+```shell
+java -cp "target/classes" com.example.Contractor.RewriterCSV 
+"src/main/resources/dataFiles/country.csv" 
+"src/main/resources/dataFiles/industry.csv" 
+"src/main/resources/dataFiles/org_form.csv"
+```
 
 ## Usage
 After project installing go to "target" directory.
