@@ -5,15 +5,18 @@ import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.DTO.OrgForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provides access to database.
@@ -23,73 +26,74 @@ import java.util.List;
 @Repository
 public class ContractorRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContractorRepository.class);
-
-    private static final int PAGE_SIZE = 10;
-
-    private JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
-     * Creates instance with initialized {@code JdbcTemplate}.
+     * Creates instance with initialized {@code NamedParameterJdbcTemplate}.
+     *
      * @param jdbcTemplate
      */
     @Autowired
-    public ContractorRepository(JdbcTemplate jdbcTemplate) {
+    public ContractorRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
      * Implements SQL INSERT and UPDATE queries.
      * <p>
-     * At first tries to insert new row into database.
-     * If failed, updates the existing row.
+     * At first tries to insert new entity into database.
+     * If failed, updates the existing entity.
      *
      * @param contractor instance that must be added or updated
-     * @return added or updated rows amount
+     * @return added/updated instance - if successful; {@code Optional.empty()} - else
      */
-    public int save(Contractor contractor) {
+    public Optional<Contractor> save(Contractor contractor) {
         String sql = """
                 INSERT INTO contractor (id, parent_id, name, name_full, inn, ogrn, country, industry, org_form)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (:id, :parentId, :name, :nameFull, :inn, :ogrn, :country, :industry, :orgForm)
                 ON CONFLICT (id)
-                DO UPDATE SET id = ?, parent_id = ?, name = ?, name_full = ?, inn = ?, ogrn = ?, country = ?, industry = ?, org_form = ?;
+                DO UPDATE SET id = :id, parent_id = :parentId, name = :name, name_full = :nameFull, inn = :inn,
+                ogrn = :ogrn, country = :country, industry = :industry, org_form = :orgForm;
                 """;
-        return this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, contractor.getId());
-            ps.setString(2, contractor.getParentId());
-            ps.setString(3, contractor.getName());
-            ps.setString(4, contractor.getNameFull());
-            ps.setString(5, contractor.getInn());
-            ps.setString(6, contractor.getOgrn());
-            ps.setString(7, contractor.getCountry());
-            ps.setInt(8, contractor.getIndustry());
-            ps.setInt(9, contractor.getOrgForm());
-            ps.setString(10, contractor.getId());
-            ps.setString(11, contractor.getParentId());
-            ps.setString(12, contractor.getName());
-            ps.setString(13, contractor.getNameFull());
-            ps.setString(14, contractor.getInn());
-            ps.setString(15, contractor.getOgrn());
-            ps.setString(16, contractor.getCountry());
-            ps.setInt(17, contractor.getIndustry());
-            ps.setInt(18, contractor.getOrgForm());
-            LOGGER.info("Saved the contractor with id = {}.", contractor.getId());
-            return ps;
-        });
+        SqlParameterSource params = new BeanPropertySqlParameterSource(contractor);
+        jdbcTemplate.update(sql, params);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("""
+                SELECT *
+                FROM contractor
+                WHERE id = :id;
+                """, Collections.singletonMap("id", contractor.getId()),
+                    (rs, rowNum) -> new Contractor(
+                            rs.getString("id"),
+                            rs.getString("parent_id"),
+                            rs.getString("name"),
+                            rs.getString("name_full"),
+                            rs.getString("inn"),
+                            rs.getString("ogrn"),
+                            rs.getString("country"),
+                            rs.getInt("industry"),
+                            rs.getInt("org_form"),
+                            rs.getDate("create_date"),
+                            rs.getDate("modify_date"),
+                            rs.getString("create_user_id"),
+                            rs.getString("modify_user_id"),
+                            rs.getBoolean("is_active")
+                    )));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     /**
      * Implements SQL SELECT (by primary key) query.
      * <p>
-     * Tries to find {@link Contractor} suitable instance in 'contractor' table
+     * Tries to find {@link Contractor} suitable entity in 'contractor' table
      * and all relevant data from related tables ('country', 'industry' and 'org_form').
      *
-     * @param id value of {@code id} field of searched {@code Contractor} instance
-     * @return coupled data - if request was successful, {@code null} - else
+     * @param id value of {@code id} field of searched {@code Contractor} entity
+     * @return coupled data - if request was successful, {@code Optional.empty()} - else
      */
-    public List<Object> get(String id) {
-        LOGGER.info("Getting the contractor by id = {}.", id);
+    public Optional<List<Object>> get(String id) {
         String sql = """
                 SELECT contractor.*,
                 country.id AS c_id, country.name AS c_name, country.is_active AS c_active,
@@ -99,107 +103,105 @@ public class ContractorRepository {
                 JOIN country ON contractor.country = country.id
                 JOIN industry ON contractor.industry = industry.id
                 JOIN org_form ON contractor.org_form = org_form.id
-                WHERE contractor.id = ?;
+                WHERE contractor.id = :id;
                """;
         try {
-            return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-                Contractor contractor = new Contractor(
-                        rs.getString("id"),
-                        rs.getString("parent_id"),
-                        rs.getString("name"),
-                        rs.getString("name_full"),
-                        rs.getString("inn"),
-                        rs.getString("ogrn"),
-                        rs.getString("country"),
-                        rs.getInt("industry"),
-                        rs.getInt("org_form"),
-                        rs.getDate("create_date"),
-                        rs.getDate("modify_date"),
-                        rs.getString("create_user_id"),
-                        rs.getString("modify_user_id"),
-                        rs.getBoolean("is_active")
-                );
-                Country country = new Country(
-                        rs.getString("c_id"),
-                        rs.getString("c_name"),
-                        rs.getBoolean("c_active")
-                );
-                Industry industry = new Industry(
-                        rs.getInt("i_id"),
-                        rs.getString("i_name"),
-                        rs.getBoolean("i_active")
-                );
-                OrgForm orgForm = new OrgForm(
-                        rs.getInt("of_id"),
-                        rs.getString("of_name"),
-                        rs.getBoolean("of_active")
-                );
-                LOGGER.info("Successful receiving of contractor {} with following {}, {}, {}.",
-                        contractor, country, industry, orgForm);
-                return List.of(contractor, country, industry, orgForm);
-            }, id);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Collections.singletonMap("id", id),
+                    (rs, rowNum) -> {
+                        Contractor contractor = new Contractor(
+                                rs.getString("id"),
+                                rs.getString("parent_id"),
+                                rs.getString("name"),
+                                rs.getString("name_full"),
+                                rs.getString("inn"),
+                                rs.getString("ogrn"),
+                                rs.getString("country"),
+                                rs.getInt("industry"),
+                                rs.getInt("org_form"),
+                                rs.getDate("create_date"),
+                                rs.getDate("modify_date"),
+                                rs.getString("create_user_id"),
+                                rs.getString("modify_user_id"),
+                                rs.getBoolean("is_active")
+                        );
+                        Country country = new Country(
+                                rs.getString("c_id"),
+                                rs.getString("c_name"),
+                                rs.getBoolean("c_active")
+                        );
+                        Industry industry = new Industry(
+                                rs.getInt("i_id"),
+                                rs.getString("i_name"),
+                                rs.getBoolean("i_active")
+                        );
+                        OrgForm orgForm = new OrgForm(
+                                rs.getInt("of_id"),
+                                rs.getString("of_name"),
+                                rs.getBoolean("of_active")
+                        );
+                        return List.of(contractor, country, industry, orgForm);
+                    }));
         } catch (EmptyResultDataAccessException exception) {
-            LOGGER.info("Contractor with id = {} not exist.", id);
-            return null;
+            return Optional.empty();
         }
     }
 
     /**
      * Implements logical removing from database.
      * <p>
-     * UPDATE 'is_active' field to 'false' value instead of executing the DELETE query.
+     * Update 'is_active' field to 'false' value instead of executing the DELETE query.
      *
      * @param id value of {@code id} field of {@link Contractor} instance
      * @return updated rows amount
      */
     public int delete(String id) {
-        return this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement("UPDATE contractor SET is_active=false WHERE id=?");
-            ps.setString(1, id);
-            LOGGER.info("Deleted contractor with id = {}.", id);
-            return ps;
-        });
+        return jdbcTemplate.update("""
+                UPDATE contractor
+                SET is_active = false
+                WHERE id = :id;
+                """, Collections.singletonMap("id", id));
     }
 
     /**
      * Implements SQL SELECT query with sorting and paging.
      * <p>
-     * Finds suitable {@link Contractor} instances in database then returns some of them.
-     * Use {@link ContractorSearch} instance as source of sorting fields.
-     * Can`t return more instances then {@link #PAGE_SIZE}.
+     * Finds suitable {@link Contractor} entities in database then returns some of them.
+     * Uses {@link ContractorSearch} instance as source of sorting fields.
+     * Can`t return more instances than {@code size}.
      *
      * @param contractorSearch sorting field
      * @param page number of result page that will be returned
-     * @return {@code Contractor} instances that match the given condition (in {@code contactorSearch});
-     * returned instances count will be no more than page size
+     * @param size amount of returned entities
+     * @return {@code Contractor} instances that match the given condition (in {@code contactorSearch})
      */
-    public List<Contractor> search(ContractorSearch contractorSearch, int page) {
-        LOGGER.info("Searching by {} and page number = {}", contractorSearch, page);
+    public List<Contractor> search(ContractorSearch contractorSearch, int page, int size) {
         String sql = """
                 SELECT *
                 FROM contractor
                 WHERE is_active AND
-                id ILIKE ? AND
-                COALESCE(parent_id, '') ILIKE ? AND
-                (name ILIKE ? OR name_full ILIKE ? OR inn ILIKE ? OR ogrn ILIKE ?) AND
-                country = ANY (SELECT id FROM country WHERE name ILIKE ?) AND
-                CAST(industry AS TEXT) ILIKE ? AND
-                org_form = ANY (SELECT id FROM org_form WHERE name ILIKE ?)
-                LIMIT ? OFFSET ?;
+                id ILIKE :id AND
+                COALESCE(parent_id, '') ILIKE :parentId AND
+                (name ILIKE :name OR COALESCE(name_full, '') ILIKE :nameFull OR COALESCE(inn, '') ILIKE :inn
+                 OR COALESCE(ogrn, '') ILIKE :ogrn) AND
+                country = ANY (SELECT id FROM country WHERE name ILIKE :country) AND
+                CAST(industry AS TEXT) ILIKE :industry AND
+                org_form = ANY (SELECT id FROM org_form WHERE name ILIKE :orgForm)
+                LIMIT :size OFFSET :page;
                 """;
-        List<Contractor> contractors = this.jdbcTemplate.query(sql, ps -> {
-            ps.setString(1, contractorSearch.getContractorId().orElse("%"));
-            ps.setString(2, contractorSearch.getParentId().orElse("%"));
-            ps.setString(3, format(contractorSearch.getContractorSearch().orElse("%")));
-            ps.setString(4, format(contractorSearch.getContractorSearch().orElse("%")));
-            ps.setString(5, format(contractorSearch.getContractorSearch().orElse("%")));
-            ps.setString(6, format(contractorSearch.getContractorSearch().orElse("%")));
-            ps.setString(7, format(contractorSearch.getCountry().orElse("%")));
-            ps.setString(8, contractorSearch.getIndustry().orElse("%"));
-            ps.setString(9, format(contractorSearch.getOrgForm().orElse("%")));
-            ps.setInt(10, PAGE_SIZE);
-            ps.setInt(11, page * PAGE_SIZE);
-        }, (rs, rowNum) -> new Contractor(
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", contractorSearch.getContractorId().orElse("%"));
+        params.put("parentId", contractorSearch.getParentId().orElse("%"));
+        params.put("name", format(contractorSearch.getContractorSearch().orElse("%")));
+        params.put("nameFull", format(contractorSearch.getContractorSearch().orElse("%")));
+        params.put("inn", format(contractorSearch.getContractorSearch().orElse("%")));
+        params.put("ogrn", format(contractorSearch.getContractorSearch().orElse("%")));
+        params.put("country", format(contractorSearch.getCountry().orElse("%")));
+        params.put("industry", contractorSearch.getIndustry().orElse("%"));
+        params.put("orgForm", format(contractorSearch.getOrgForm().orElse("%")));
+        params.put("size", size);
+        params.put("page", page * size);
+        return jdbcTemplate.query(sql, params,
+                (rs, rowNum) -> new Contractor(
                 rs.getString("id"),
                 rs.getString("parent_id"),
                 rs.getString("name"),
@@ -215,8 +217,6 @@ public class ContractorRepository {
                 rs.getString("modify_user_id"),
                 rs.getBoolean("is_active")
         ));
-        LOGGER.info("Found {} contractor(s).", contractors.size());
-        return contractors;
     }
 
     private String format(String param) {
