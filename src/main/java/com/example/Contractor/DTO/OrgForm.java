@@ -1,37 +1,21 @@
 package com.example.Contractor.DTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Represents 'org_form' entity from database.
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrgForm {
 
     private int id;
     private String name;
     private boolean isActive;
-
-    /**
-     * Creates full initialized instance.
-     *
-     * @param id
-     * @param name
-     * @param isActive
-     */
-    public OrgForm(int id, String name, boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.isActive = isActive;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
 
 }
