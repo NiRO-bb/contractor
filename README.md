@@ -6,6 +6,7 @@ This project provides interaction methods for <i>contractors</i>.
 * Java 21
 * Maven 3.9.9
 * Spring Boot 3.5.3
+* Docker (for testing)
 * <b>PostgreSQL only</b> 
 
 ### Steps to install project
@@ -14,24 +15,12 @@ This project provides interaction methods for <i>contractors</i>.
 git clone https://github.com/NiRO-bb/contractor.git
 ```
 
-2. Build with Maven <p>
-   <b>Below just a pattern!</b>
-   You <b>must</b> replace the following:
-* `<port>` with your real port
-* `<database1>` with name of database <b>for testing</b>
-* `<username>` with name of user who has access to specified database
-* `<password>` with password of specified user
+2. Build with Maven
 ```shell
 mvn clean package 
-"-Dspring.datasource.url=jdbc:postgresql://localhost:<port>/<database1>"
-"-Dspring.datasource.username=<username>" 
-"-Dspring.datasource.password=<password>" 
 ```
-Do not use the same database for testing and usage.
-The application cleans up your database during testing.
-It is better to use a completely new database (for testing). 
 
-3. Complete rewriting data files.
+3. Complete rewriting data files (not necessary but welcome).
    Some data files that used during DB migration can be written in invalid format.
 ```shell
 java -cp "target/classes" com.example.Contractor.RewriterCSV 
