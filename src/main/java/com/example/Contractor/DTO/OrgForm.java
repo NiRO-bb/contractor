@@ -18,4 +18,8 @@ public class OrgForm {
     private String name;
     private boolean isActive;
 
+    public String desc() {
+        return String.format("{ \"id\":\"%s\", \"name\":\"%s\" }", id, name);
+    }
+
 }
