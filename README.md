@@ -15,9 +15,9 @@ This project provides interaction methods for <i>contractors</i>.
 git clone https://github.com/NiRO-bb/contractor.git
 ```
 
-2. Build with Maven
+2. Compile
 ```shell
-mvn clean package 
+mvn clean compile 
 ```
 
 3. Complete rewriting data files (not necessary but welcome).
@@ -27,6 +27,11 @@ java -cp "target/classes" com.example.Contractor.RewriterCSV
 "src/main/resources/dataFiles/country.csv" 
 "src/main/resources/dataFiles/industry.csv" 
 "src/main/resources/dataFiles/org_form.csv"
+```
+
+4. Build
+```shell
+mvn package
 ```
 
 ## Usage
