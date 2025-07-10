@@ -9,33 +9,28 @@ import com.example.Contractor.Repository.ContractorRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class ContractorRepositoryTest extends ContractorApplicationTests{
+@SpringBootTest
+@ExtendWith(DatabaseSetup.class)
+public class ContractorRepositoryTest {
 
     @Autowired
     private ContractorRepository repository;
 
     @BeforeAll
     public static void setup(@Autowired JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.update("INSERT INTO country (id, name) VALUES ('TEST', 'TestCountry')");
-        jdbcTemplate.update("INSERT INTO industry (name) VALUES ('TestIndustry')");
-        jdbcTemplate.update("INSERT INTO org_form (name) VALUES ('TestOrgForm')");
         jdbcTemplate.update("""
         INSERT INTO contractor
         (id, parent_id, name, name_full, inn, ogrn, country, industry, org_form)
-        VALUES ('0', null, 'baseName', 'baseNameFull', 'baseInn', 'baseOgrn', 'TEST', 1, 1)
+        VALUES ('0', null, 'baseName', 'baseNameFull', 'baseInn', 'baseOgrn', 'ABH', 1, 1)
         """);
     }
-
-//    @AfterAll
-//    public static void cleanUp(@Autowired JdbcTemplate jdbcTemplate) {
-//        jdbcTemplate.execute("DROP SCHEMA public CASCADE");
-//        jdbcTemplate.execute("CREATE SCHEMA public");
-//    }
 
     @Test
     public void testSave(@Autowired JdbcTemplate jdbcTemplate) {
@@ -45,7 +40,7 @@ public class ContractorRepositoryTest extends ContractorApplicationTests{
         Contractor c = new Contractor();
         c.setId("1");
         c.setName("testName");
-        c.setCountry("TEST");
+        c.setCountry("ABH");
         c.setIndustry(1);
         c.setOrgForm(1);
         repository.save(c);
@@ -78,15 +73,15 @@ public class ContractorRepositoryTest extends ContractorApplicationTests{
 
     @Test
     public void testGet() {
-        List<Object> list = (List<Object>) repository.get("0").get();
+        List<Object> list = repository.get("0").get();
         Contractor contractor = (Contractor) list.get(0);
         Country country = (Country) list.get(1);
         Industry industry = (Industry) list.get(2);
         OrgForm orgForm  = (OrgForm) list.get(3);
         Assertions.assertEquals("baseName", contractor.getName());
-        Assertions.assertEquals("TestCountry", country.getName());
-        Assertions.assertEquals("TestIndustry", industry.getName());
-        Assertions.assertEquals("TestOrgForm", orgForm.getName());
+        Assertions.assertEquals("Абхазия", country.getName());
+        Assertions.assertEquals("Авиастроение", industry.getName());
+        Assertions.assertEquals("-", orgForm.getName());
         Assertions.assertTrue(repository.get("invalid").isEmpty());
     }
 
@@ -108,15 +103,15 @@ public class ContractorRepositoryTest extends ContractorApplicationTests{
         Assertions.assertEquals("baseName", contractor.getName());
 
         contractor = repository.search(new ContractorSearch(
-                null, null, null, "test", null, null), 0, 1).getFirst();
-        Assertions.assertEquals("TEST", contractor.getCountry());
+                null, null, null, "абхазия", null, null), 0, 1).getFirst();
+        Assertions.assertEquals("ABH", contractor.getCountry());
 
         contractor = repository.search(new ContractorSearch(
                 null, null, null, null, 1, null), 0, 1).getFirst();
         Assertions.assertEquals(1, contractor.getIndustry());
 
         contractor = repository.search(new ContractorSearch(
-                null, null, null, null, null, "test"), 0, 1).getFirst();
+                null, null, null, null, null, "-"), 0, 1).getFirst();
         Assertions.assertEquals(1, contractor.getOrgForm());
 
         List<Contractor> list = repository.search(new ContractorSearch(
