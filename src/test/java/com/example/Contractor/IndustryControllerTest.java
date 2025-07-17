@@ -31,10 +31,16 @@ public class IndustryControllerTest {
     }
 
     @Test
-    public void testGetAllFailure() {
+    public void testGetAllEmpty() {
         Mockito.when(service.get()).thenReturn(new ArrayList<>());
         ResponseEntity<?> response = controller.get();
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetAllFailure() {
+        Mockito.when(service.get()).thenThrow(new RuntimeException("error"));
+        Assertions.assertThrows(RuntimeException.class, () -> controller.get());
     }
 
     @Test
@@ -45,10 +51,16 @@ public class IndustryControllerTest {
     }
 
     @Test
-    public void testGetFailure() {
+    public void testGetEmpty() {
         Mockito.when(service.get(any(Integer.class))).thenReturn(Optional.empty());
         ResponseEntity<?> response = controller.get(0);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetFailure() {
+        Mockito.when(service.get(any(Integer.class))).thenThrow(new RuntimeException("error"));
+        Assertions.assertThrows(RuntimeException.class, () -> controller.get(0));
     }
 
     @Test
@@ -59,10 +71,16 @@ public class IndustryControllerTest {
     }
 
     @Test
-    public void testSaveFailure() {
+    public void testSaveEmpty() {
         Mockito.when(service.save(any(Industry.class))).thenReturn(Optional.empty());
         ResponseEntity<?> response = controller.save(new Industry());
         Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testSaveFailure() {
+        Mockito.when(service.save(any(Industry.class))).thenThrow(new RuntimeException("error"));
+        Assertions.assertThrows(RuntimeException.class, () -> controller.save(new Industry()));
     }
 
     @Test
@@ -73,10 +91,16 @@ public class IndustryControllerTest {
     }
 
     @Test
-    public void testDeleteFailure() {
+    public void testDeleteZero() {
         Mockito.when(service.delete(any(Integer.class))).thenReturn(0);
         ResponseEntity<?> response = controller.delete(0);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteFailure() {
+        Mockito.when(service.delete(any(Integer.class))).thenThrow(new RuntimeException("error"));
+        Assertions.assertThrows(RuntimeException.class, () -> controller.delete(0));
     }
 
 }
