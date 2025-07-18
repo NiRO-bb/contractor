@@ -2,7 +2,6 @@ package com.example.Contractor;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,11 +17,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
-@ExtendWith({MockitoExtension.class, DatabaseSetup.class})
+@ExtendWith(DatabaseSetup.class)
 @AutoConfigureMockMvc
 public class ContractorUIControllerTest {
 
-    private final static String CREATE_REQUEST = """
+    private final static String CONTENT = """
                                 {
                                     "id": "test",
                                     "parentId": "test",
@@ -56,7 +55,7 @@ public class ContractorUIControllerTest {
     public void testSavePermission() throws Exception {
         mockMvc.perform(put("/ui/contractor/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CREATE_REQUEST))
+                        .content(CONTENT))
                 .andExpect(status().isOk());
     }
 
@@ -65,7 +64,7 @@ public class ContractorUIControllerTest {
     public void testSaveDenial() throws Exception {
         mockMvc.perform(put("/ui/contractor/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CREATE_REQUEST))
+                        .content(CONTENT))
                 .andExpect(status().isForbidden());
     }
 
