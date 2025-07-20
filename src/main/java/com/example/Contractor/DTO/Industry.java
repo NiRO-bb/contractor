@@ -1,5 +1,6 @@
 package com.example.Contractor.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class Industry {
 
     private int id;
     private String name;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private boolean isActive;
 
     public String desc() {

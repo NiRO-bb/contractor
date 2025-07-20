@@ -1,5 +1,6 @@
 package com.example.Contractor.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +26,20 @@ public class Contractor {
     private String country;
     private int industry;
     private int orgForm;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Date createDate;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Date modifyDate;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String createUserId;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String modifyUserId;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private boolean isActive;
 
     public String desc() {
