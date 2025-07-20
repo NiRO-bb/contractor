@@ -3,6 +3,7 @@ package com.example.Contractor.Controller.UI;
 import com.example.Contractor.Controller.ContractorController;
 import com.example.Contractor.DTO.Contractor;
 import com.example.Contractor.DTO.ContractorSearch;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.List;
  * Responsible for request that require authentication.
  * Just checks user role, then calls ContractorController methods.
  */
+@Hidden
 @RestController
 @RequestMapping("/ui/contractor")
 @RequiredArgsConstructor

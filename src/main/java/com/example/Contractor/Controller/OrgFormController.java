@@ -1,7 +1,14 @@
 package com.example.Contractor.Controller;
 
+import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.OrgForm;
 import com.example.Contractor.Service.OrgFormService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +47,14 @@ public class OrgFormController {
      *
      * @return list of active (value of {@code is_active} field = true) {@code OrgForm} instances and OK status
      */
+    @Operation(summary = "Retrieve all OrgForms", description = "Retrieves all active OrgForm entities")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OrgForm list received",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Country.class)))),
+            @ApiResponse(responseCode = "204", description = "OrgForm list not received - there are no matched entities"),
+            @ApiResponse(responseCode = "500", description = "OrgForm list receiving was failing",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @GetMapping("/all")
     public ResponseEntity<?> get() {
         try {
@@ -66,6 +81,15 @@ public class OrgFormController {
      * @param id value of {@code id} field of {@code OrgForm} instance
      * @return {@code OrgForm} instance and OK status; NOT_FOUND if there is no matched OrgForm entities
      */
+    @Operation(summary = "Retrieve OrgForm", description = "Retrieves OrgForm by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OrgForm received",
+                    content = @Content(schema = @Schema(implementation = Country.class))),
+            @ApiResponse(responseCode = "404", description = "OrgForm not received - invalid data",
+                    content = @Content(schema = @Schema(type = "string", example = "error message"))),
+            @ApiResponse(responseCode = "500", description = "OrgForm receiving was failing",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") int id) {
         try {
@@ -92,6 +116,14 @@ public class OrgFormController {
      * @param orgForm instance that must be added or updated in database
      * @return added/updated OrgForm entity and OK status; INTERNAL_SERVER_ERROR if something goes wrong
      */
+    @Operation(summary = "Add/update OrgForm",
+            description = "Adds or updates (depends on passed 'id' value) OrgForm entity")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OrgForm saved",
+                    content = @Content(schema = @Schema(implementation = Country.class))),
+            @ApiResponse(responseCode = "500", description = "OrgForm not saved",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @PutMapping("/save")
     public ResponseEntity<?> save(@RequestBody OrgForm orgForm) {
         try {
@@ -118,6 +150,14 @@ public class OrgFormController {
      * @param id value of {@code id} field of {@code OrgForm} instance
      * @return NO_CONTENT - success, NOT_FOUND - there is no matched OrgForm entities
      */
+    @Operation(summary = "Delete OrgForm", description = "Logically deletes OrgForm entity")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OrgForm deleted"),
+            @ApiResponse(responseCode = "404", description = "OrgForm not deleted - invalid data",
+                    content = @Content(schema = @Schema(type = "string", example = "error message"))),
+            @ApiResponse(responseCode = "500", description = "OrgForm deleting was failed",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
         try {

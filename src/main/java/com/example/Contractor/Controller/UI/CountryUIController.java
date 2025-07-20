@@ -2,6 +2,7 @@ package com.example.Contractor.Controller.UI;
 
 import com.example.Contractor.Controller.CountryController;
 import com.example.Contractor.DTO.Country;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Responsible for request that require authentication.
  * Just checks user role, then calls CountryController methods.
  */
+@Hidden
 @RestController
 @RequestMapping("/ui/contractor/country")
 @RequiredArgsConstructor

@@ -1,7 +1,14 @@
 package com.example.Contractor.Controller;
 
+import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.Service.IndustryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +47,14 @@ public class IndustryController {
      *
      * @return list of active (value of {@code is_active} field = true) {@code Industry} instances and http OK status
      */
+    @Operation(summary = "Retrieve all Industries", description = "Retrieves all active Industry entities")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Industry list received",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Country.class)))),
+            @ApiResponse(responseCode = "204", description = "Industry list not received - there are no matched entities"),
+            @ApiResponse(responseCode = "500", description = "Industry list receiving was failing",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @GetMapping("/all")
     public ResponseEntity<?> get() {
         try {
@@ -67,6 +82,15 @@ public class IndustryController {
      * @return {@code Industry} instance and OK status;
      * NOT_FOUND - there is no matched Industry entities
      */
+    @Operation(summary = "Retrieve Industry", description = "Retrieves Industry by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Industry received",
+                    content = @Content(schema = @Schema(implementation = Country.class))),
+            @ApiResponse(responseCode = "404", description = "Industry not received - invalid data",
+                    content = @Content(schema = @Schema(type = "string", example = "error message"))),
+            @ApiResponse(responseCode = "500", description = "Industry receiving was failing",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") int id) {
         try {
@@ -93,6 +117,14 @@ public class IndustryController {
      * @param industry instance that must be added or updated in database
      * @return added/updated Industry entity and OK status; INTERNAL_SERVER_ERROR if something goes wrong
      */
+    @Operation(summary = "Add/update Industry",
+            description = "Adds or updates (depends on passed 'id' value) Industry entity")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Industry saved",
+                    content = @Content(schema = @Schema(implementation = Country.class))),
+            @ApiResponse(responseCode = "500", description = "Industry not saved",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @PutMapping("/save")
     public ResponseEntity<?> save(@RequestBody Industry industry) {
         try {
@@ -119,6 +151,14 @@ public class IndustryController {
      * @param id value of {@code id} field of {@code Industry} instance
      * @return NO_CONTENT - success, NOT_FOUND - there is no matched Industry entities
      */
+    @Operation(summary = "Delete Industry", description = "Logically deletes Industry entity")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Industry deleted"),
+            @ApiResponse(responseCode = "404", description = "Industry not deleted - invalid data",
+                    content = @Content(schema = @Schema(type = "string", example = "error message"))),
+            @ApiResponse(responseCode = "500", description = "Industry deleting was failed",
+                    content = @Content(schema = @Schema(type = "string", example = "error message")))
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
         try {
