@@ -1,5 +1,6 @@
-package com.example.Contractor;
+package com.example.Contractor.UIController;
 
+import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,57 +12,57 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
 @ExtendWith(DatabaseSetup.class)
 @AutoConfigureMockMvc
-public class CountryUIControllerTest {
-    
+public class IndustryUIControllerTest {
+
     private final static String CONTENT = """
             {
-                "id": "testSave",
+                "id": 99999,
                 "name": "testSave"
             }
             """;
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     @WithMockUser(username = "user", authorities = "USER")
     public void testGetAllPermission() throws Exception {
-        mockMvc.perform(get("/ui/contractor/country/all"))
+        mockMvc.perform(get("/ui/contractor/industry/all"))
                 .andExpect(status().isOk());
     }
-    
+
     @Test
     @WithAnonymousUser
     public void testGetAllDenial() throws Exception {
-        mockMvc.perform(get("/ui/contractor/country/all"))
+        mockMvc.perform(get("/ui/contractor/industry/all"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user", authorities = "USER")
     public void testGetPermission() throws Exception {
-        mockMvc.perform(get("/ui/contractor/country/testGet"))
+        mockMvc.perform(get("/ui/contractor/industry/99998"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithAnonymousUser
     public void testGetDenial() throws Exception {
-        mockMvc.perform(get("/ui/contractor/country/testGet"))
+        mockMvc.perform(get("/ui/contractor/industry/99999"))
                 .andExpect(status().isForbidden());
     }
-    
+
     @Test
     @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
     public void testSavePermission() throws Exception {
-        mockMvc.perform(put("/ui/contractor/country/save")
+        mockMvc.perform(put("/ui/contractor/industry/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CONTENT))
                 .andExpect(status().isOk());
@@ -70,24 +71,24 @@ public class CountryUIControllerTest {
     @Test
     @WithMockUser(username = "user", authorities = "USER")
     public void testSaveDenial() throws Exception {
-        mockMvc.perform(put("/ui/contractor/country/save")
+        mockMvc.perform(put("/ui/contractor/industry/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CONTENT))
                 .andExpect(status().isForbidden());
     }
-    
+
     @Test
     @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
     public void testDeletePermission() throws Exception {
-        mockMvc.perform(delete("/ui/contractor/country/delete/testDelete"))
+        mockMvc.perform(delete("/ui/contractor/industry/delete/99998"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = "user", authorities = "USER")
     public void testDeleteDenial() throws Exception {
-        mockMvc.perform(delete("/ui/contractor/country/delete/testDelete"))
+        mockMvc.perform(delete("/ui/contractor/industry/delete/99999"))
                 .andExpect(status().isForbidden());
     }
-    
+
 }

@@ -1,8 +1,7 @@
-package com.example.Contractor;
+package com.example.Contractor.Controller;
 
-import com.example.Contractor.Controller.IndustryController;
-import com.example.Contractor.DTO.Industry;
-import com.example.Contractor.Service.IndustryService;
+import com.example.Contractor.DTO.OrgForm;
+import com.example.Contractor.Service.OrgFormService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,14 +17,14 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class IndustryControllerTest {
+public class OrgFormControllerTest {
 
-    private IndustryService service = Mockito.mock(IndustryService.class);
-    private IndustryController controller = new IndustryController(service);
+    private OrgFormService service = Mockito.mock(OrgFormService.class);
+    private OrgFormController controller = new OrgFormController(service);
 
     @Test
     public void testGetAllSuccess() {
-        Mockito.when(service.get()).thenReturn(Collections.singletonList(new Industry()));
+        Mockito.when(service.get()).thenReturn(Collections.singletonList(new OrgForm()));
         ResponseEntity<?> response = controller.get();
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -45,7 +44,7 @@ public class IndustryControllerTest {
 
     @Test
     public void testGetSuccess() {
-        Mockito.when(service.get(any(Integer.class))).thenReturn(Optional.of(new Industry()));
+        Mockito.when(service.get(any(Integer.class))).thenReturn(Optional.of(new OrgForm()));
         ResponseEntity<?> response = controller.get(0);
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -65,22 +64,22 @@ public class IndustryControllerTest {
 
     @Test
     public void testSaveSuccess() {
-        Mockito.when(service.save(any(Industry.class))).thenReturn(Optional.of(new Industry()));
-        ResponseEntity<?> response = controller.save(new Industry());
+        Mockito.when(service.save(any(OrgForm.class))).thenReturn(Optional.of(new OrgForm()));
+        ResponseEntity<?> response = controller.save(new OrgForm());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void testSaveEmpty() {
-        Mockito.when(service.save(any(Industry.class))).thenReturn(Optional.empty());
-        ResponseEntity<?> response = controller.save(new Industry());
+        Mockito.when(service.save(any(OrgForm.class))).thenReturn(Optional.empty());
+        ResponseEntity<?> response = controller.save(new OrgForm());
         Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
     public void testSaveFailure() {
-        Mockito.when(service.save(any(Industry.class))).thenThrow(new RuntimeException("error"));
-        Assertions.assertThrows(RuntimeException.class, () -> controller.save(new Industry()));
+        Mockito.when(service.save(any(OrgForm.class))).thenThrow(new RuntimeException("error"));
+        Assertions.assertThrows(RuntimeException.class, () -> controller.save(new OrgForm()));
     }
 
     @Test

@@ -1,6 +1,5 @@
-package com.example.Contractor;
+package com.example.Contractor.Controller;
 
-import com.example.Contractor.Controller.ContractorController;
 import com.example.Contractor.DTO.Contractor;
 import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.Service.ContractorService;
