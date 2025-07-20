@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 /**
  * Handles exceptions from controller classes.
  */
-@RestControllerAdvice("package com.example.Contractor.Controller")
+@RestControllerAdvice
 public class ControllerExceptionHandler {
 
     /**
