@@ -1,5 +1,6 @@
 package com.example.Contractor.UIController;
 
+import com.example.Contractor.Controller.OrgFormController;
 import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -21,13 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class OrgFormUIControllerTest {
 
-
-    private final static String CONTENT = """
-            {
-                "id": 99999,
-                "name": "testSave"
-            }
-            """;
+    @MockitoBean
+    private OrgFormController orgFormController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +47,7 @@ public class OrgFormUIControllerTest {
     @WithMockUser(username = "user", authorities = "USER")
     public void testGetPermission() throws Exception {
         mockMvc.perform(get("/ui/contractor/org_form/99998"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -65,7 +62,7 @@ public class OrgFormUIControllerTest {
     public void testSavePermission() throws Exception {
         mockMvc.perform(put("/ui/contractor/org_form/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isOk());
     }
 
@@ -74,7 +71,7 @@ public class OrgFormUIControllerTest {
     public void testSaveDenial() throws Exception {
         mockMvc.perform(put("/ui/contractor/org_form/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isForbidden());
     }
 
@@ -82,7 +79,7 @@ public class OrgFormUIControllerTest {
     @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
     public void testDeletePermission() throws Exception {
         mockMvc.perform(delete("/ui/contractor/org_form/delete/99998"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -91,6 +88,5 @@ public class OrgFormUIControllerTest {
         mockMvc.perform(delete("/ui/contractor/org_form/delete/99999"))
                 .andExpect(status().isForbidden());
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.Contractor.UIController;
 
+import com.example.Contractor.Controller.ContractorController;
 import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -22,69 +23,58 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 public class ContractorUIControllerTest {
 
-    private final static String CONTENT = """
-                                {
-                                    "id": "test",
-                                    "parentId": "test",
-                                    "name": "test",
-                                    "nameFull": "test",
-                                    "inn": "tets",
-                                    "ogrn": "test",
-                                    "country": "ABH",
-                                    "industry": 1,
-                                    "orgForm": 1
-                                }
-                                """;
+    @MockitoBean
+    private ContractorController controllerController;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "user", authorities = "USER")
+    @WithMockUser(authorities = "USER")
     public void testGetPermission() throws Exception {
-        mockMvc.perform(get("/ui/contractor/testGet")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/ui/contractor/testGet")).andExpect(status().isOk());
     }
 
     @Test
-    @WithAnonymousUser
+    @WithMockUser(authorities = "ADMIN")
     public void testGetDenial() throws Exception {
-        mockMvc.perform(get("/ui/contractor/test")).andExpect(status().isForbidden());
+        mockMvc.perform(get("/ui/contractor/testGet")).andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
+    @WithMockUser(authorities = "CONTRACTOR_SUPERUSER")
     public void testSavePermission() throws Exception {
         mockMvc.perform(put("/ui/contractor/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "USER")
+    @WithMockUser(authorities = "USER")
     public void testSaveDenial() throws Exception {
         mockMvc.perform(put("/ui/contractor/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
+    @WithMockUser(authorities = "CONTRACTOR_SUPERUSER")
     public void testDeletePermission() throws Exception {
         mockMvc.perform(delete("/ui/contractor/delete/testDelete"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "USER")
+    @WithMockUser(authorities = "USER")
     public void testDeleteDenial() throws Exception {
         mockMvc.perform(delete("/ui/contractor/delete/testDelete"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
+    @WithMockUser(authorities = "CONTRACTOR_SUPERUSER")
     public void testSearchPermission1() throws Exception {
         mockMvc.perform(post("/ui/contractor/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,7 +83,7 @@ public class ContractorUIControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "CONTRACTOR_RUS")
+    @WithMockUser(authorities = "CONTRACTOR_RUS")
     public void testSearchPermission2() throws Exception {
         mockMvc.perform(post("/ui/contractor/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +92,7 @@ public class ContractorUIControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "CONTRACTOR_RUS")
+    @WithMockUser(authorities = "CONTRACTOR_RUS")
     public void testSearchDenial1() throws Exception {
         mockMvc.perform(post("/ui/contractor/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +101,7 @@ public class ContractorUIControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = "USER")
+    @WithMockUser(authorities = "USER")
     public void testSearchDenial2() throws Exception {
         mockMvc.perform(post("/ui/contractor/search")
                         .contentType(MediaType.APPLICATION_JSON)

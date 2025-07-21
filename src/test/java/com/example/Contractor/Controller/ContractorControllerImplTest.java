@@ -19,10 +19,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-public class ContractorControllerTest {
+public class ContractorControllerImplTest {
 
     private ContractorService service = Mockito.mock(ContractorService.class);
-    private ContractorController controller = new ContractorController(service);
+    private ContractorController controller = new ContractorControllerImpl(service);
 
     @Test
     public void testSaveSuccess() {
@@ -97,7 +97,7 @@ public class ContractorControllerTest {
     public void testSearchEmpty() {
         Mockito.when(service.search(any(ContractorSearch.class), eq(0), eq(0))).thenReturn(new ArrayList<>());
         ResponseEntity<?> response = controller.search(new ContractorSearch(), 0, 0);
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test

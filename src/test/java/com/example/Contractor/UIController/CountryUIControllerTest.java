@@ -1,5 +1,6 @@
 package com.example.Contractor.UIController;
 
+import com.example.Contractor.Controller.CountryController;
 import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -20,14 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(DatabaseSetup.class)
 @AutoConfigureMockMvc
 public class CountryUIControllerTest {
-    
-    private final static String CONTENT = """
-            {
-                "id": "testSave",
-                "name": "testSave"
-            }
-            """;
-    
+
+    @MockitoBean
+    private CountryController countryController;
+
     @Autowired
     private MockMvc mockMvc;
     
@@ -49,7 +47,7 @@ public class CountryUIControllerTest {
     @WithMockUser(username = "user", authorities = "USER")
     public void testGetPermission() throws Exception {
         mockMvc.perform(get("/ui/contractor/country/testGet"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -64,7 +62,7 @@ public class CountryUIControllerTest {
     public void testSavePermission() throws Exception {
         mockMvc.perform(put("/ui/contractor/country/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isOk());
     }
 
@@ -73,7 +71,7 @@ public class CountryUIControllerTest {
     public void testSaveDenial() throws Exception {
         mockMvc.perform(put("/ui/contractor/country/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(CONTENT))
+                        .content("{}"))
                 .andExpect(status().isForbidden());
     }
     
@@ -81,7 +79,7 @@ public class CountryUIControllerTest {
     @WithMockUser(username = "user", authorities = "CONTRACTOR_SUPERUSER")
     public void testDeletePermission() throws Exception {
         mockMvc.perform(delete("/ui/contractor/country/delete/testDelete"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test

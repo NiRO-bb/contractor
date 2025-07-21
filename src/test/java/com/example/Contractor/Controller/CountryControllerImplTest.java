@@ -17,10 +17,10 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class CountryControllerTest {
+public class CountryControllerImplTest {
 
     private CountryService service = Mockito.mock(CountryService.class);
-    private CountryController controller = new CountryController(service);
+    private CountryControllerImpl controller = new CountryControllerImpl(service);
 
     @Test
     public void testGetAllSuccess() {
@@ -33,7 +33,7 @@ public class CountryControllerTest {
     public void testGetAllEmpty() {
         Mockito.when(service.get()).thenReturn(new ArrayList<>());
         ResponseEntity<?> response = controller.get();
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
