@@ -3,13 +3,12 @@ package com.example.Contractor.Controller.UI;
 import com.example.Contractor.Controller.ContractorController;
 import com.example.Contractor.DTO.Contractor;
 import com.example.Contractor.DTO.ContractorSearch;
+import com.example.Contractor.Utils.RoleAccess;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Responsible for request that require authentication.
@@ -89,30 +86,11 @@ public class ContractorUIController {
     public ResponseEntity<?> search(@RequestBody ContractorSearch search,
                                     @RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
-        if (hasAccess(search)) {
+        if (RoleAccess.hasAccess(search)) {
             return controller.search(search, page, size);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-    }
-
-    /**
-     * Checks if user has access to some method.
-     * Uses data stored in SecurityContextHolder - extracts user authorities.
-     *
-     * @param search contains filtering fields
-     * @return result of check (true - access permitted, false - access denied)
-     */
-    private boolean hasAccess(ContractorSearch search) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        List<String> roles = auth.getAuthorities().stream().map(Object::toString).toList();
-        if (roles.contains("CONTRACTOR_SUPERUSER") || roles.contains("SUPERUSER")) {
-            return true;
-        } else if (roles.contains("CONTRACTOR_RUS") && search.getCountry().isPresent()
-                && search.getCountry().get().equalsIgnoreCase("rus")) {
-            return true;
-        }
-        return false;
     }
 
 }
