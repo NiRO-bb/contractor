@@ -1,6 +1,5 @@
 package com.example.Contractor.DTO;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,6 @@ public class Country {
 
     private String id;
     private String name;
-
-
     private boolean isActive;
 
     public String desc() {
