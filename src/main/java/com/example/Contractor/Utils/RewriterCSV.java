@@ -1,4 +1,4 @@
-package com.example.Contractor;
+package com.example.Contractor.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +12,9 @@ import java.io.IOException;
  * Since some data files can be written in invalid format (has more columns than needed),
  * it is necessary to overwrite them.
  */
-public class RewriterCSV {
+public final class RewriterCSV {
+
+    private RewriterCSV() {}
 
     /**
      * Program entry point.
@@ -44,7 +46,7 @@ public class RewriterCSV {
 
             StringBuilder builder;
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 String[] values = line.split(";");
                 builder = new StringBuilder(values[0]).append(";");
                 for (int i = 1; i < values.length; i++) {

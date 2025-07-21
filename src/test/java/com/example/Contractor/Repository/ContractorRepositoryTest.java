@@ -1,11 +1,11 @@
-package com.example.Contractor;
+package com.example.Contractor.Repository;
 
 import com.example.Contractor.DTO.Contractor;
 import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.DTO.OrgForm;
-import com.example.Contractor.Repository.ContractorRepository;
+import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

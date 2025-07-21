@@ -1,7 +1,7 @@
-package com.example.Contractor;
+package com.example.Contractor.Repository;
 
 import com.example.Contractor.DTO.Country;
-import com.example.Contractor.Repository.CountryRepository;
+import com.example.Contractor.DatabaseSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

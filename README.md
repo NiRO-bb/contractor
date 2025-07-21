@@ -23,7 +23,7 @@ mvn clean compile
 3. Complete rewriting data files (not necessary but welcome).
    Some data files that used during DB migration can be written in invalid format.
 ```shell
-java -cp "target/classes" com.example.Contractor.RewriterCSV 
+java -cp "target/classes" com.example.Contractor.Utils.RewriterCSV 
 "src/main/resources/dataFiles/country.csv" 
 "src/main/resources/dataFiles/industry.csv" 
 "src/main/resources/dataFiles/org_form.csv"
@@ -44,14 +44,12 @@ Then launch JAR with specified database.
 You <b>must</b> replace the following:
 * `<jar_name>` with name of JAR file that produced by Maven (actual is `Contractor-0.0.1-SNAPSHOT.jar`)
 * `<port>` with your real port
-* `<database2>` with name of your real database
+* `<database>` with name of your real database
 * `<username>` with name of user who has access to specified database
 * `<password>` with password of specified user
+* `<secret>` with secret - cryptographic key used for signing and verifying the token's integrity
 ```shell
-java -jar <jar_name>.jar \
- --spring.datasource.url=jdbc:postgresql://localhost:<port>/<database2> \
-  --spring.datasource.username=<username> \
-   --spring.datasource.password=<password>
+java -jar <jar_name>.jar \ --spring.datasource.url=jdbc:postgresql://localhost:<port>/<database> \ --spring.datasource.username=<username> \ --spring.datasource.password=<password> \ --token.secret.key=<secret>
 ```
 
 ## Contributing

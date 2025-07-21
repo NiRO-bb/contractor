@@ -1,5 +1,6 @@
 package com.example.Contractor.DTO;
 
+import com.example.Contractor.Controller.ContractorControllerImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
  * <p>
  * Contains fields that used as sorting parameters in SQL query.
  *
- * @see com.example.Contractor.Controller.ContractorController
+ * @see ContractorControllerImpl
  */
 @NoArgsConstructor
 @AllArgsConstructor
