@@ -23,7 +23,7 @@ mvn clean compile
 3. Complete rewriting data files (not necessary but welcome).
    Some data files that used during DB migration can be written in invalid format.
 ```shell
-java -cp "target/classes" com.example.Contractor.RewriterCSV 
+java -cp "target/classes" com.example.Contractor.Utils.RewriterCSV 
 "src/main/resources/dataFiles/country.csv" 
 "src/main/resources/dataFiles/industry.csv" 
 "src/main/resources/dataFiles/org_form.csv"
