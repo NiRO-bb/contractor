@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,9 +68,9 @@ public class OrgFormControllerImpl implements OrgFormController {
                 LOGGER.warn("OrgForm list not obtained { \"count\":0 }");
                 return new ResponseEntity<>("OrgForm list is empty.", HttpStatus.NO_CONTENT);
             }
-        } catch (Exception exception) {
-            LOGGER.error("OrgForm list obtaining was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("OrgForm list obtaining was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("OrgForm list obtaining was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -103,9 +104,9 @@ public class OrgFormControllerImpl implements OrgFormController {
                 LOGGER.info("OrgForm not obtained {}", String.format(" \"id\":\"%s\" ", id));
                 return new ResponseEntity<>("There is no OrgForm with such id.", HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("OrgForm obtaining was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("OrgForm obtaining was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("OrgForm obtaining was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -138,9 +139,9 @@ public class OrgFormControllerImpl implements OrgFormController {
                 LOGGER.error("OrgForm not added {}", orgForm.desc());
                 return new ResponseEntity<>("OrgForm adding/updating was failed.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception exception) {
-            LOGGER.error("OrgForm adding/updating was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("OrgForm adding/updating was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("OrgForm adding/updating was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -172,9 +173,9 @@ public class OrgFormControllerImpl implements OrgFormController {
                 LOGGER.warn("OrgForm not deleted {}", String.format(" \"id\":\"%s\" ", id));
                 return new ResponseEntity<>("OrgForm deleting was failed. There is no OrgForm with such ID.", HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("OrgForm deleting was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("OrgForm deleting was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("OrgForm deleting was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
