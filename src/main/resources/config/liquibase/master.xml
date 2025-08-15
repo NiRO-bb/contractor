@@ -9,5 +9,6 @@
     <include file="changelog/V5__add_country_data.xml" relativeToChangelogFile="false"/>
     <include file="changelog/V6__add_industry_data.xml" relativeToChangelogFile="false"/>
     <include file="changelog/V7__add_org_form_data.xml" relativeToChangelogFile="false"/>
+    <include file="changelog/V8__create_outbox_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
