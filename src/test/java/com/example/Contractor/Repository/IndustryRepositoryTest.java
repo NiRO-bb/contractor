@@ -1,7 +1,7 @@
 package com.example.Contractor.Repository;
 
 import com.example.Contractor.DTO.Industry;
-import com.example.Contractor.DatabaseSetup;
+import com.example.Contractor.ContextSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@ExtendWith(DatabaseSetup.class)
+@ExtendWith(ContextSetup.class)
 public class IndustryRepositoryTest {
 
     @Autowired

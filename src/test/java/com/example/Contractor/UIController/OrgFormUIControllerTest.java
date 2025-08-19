@@ -1,7 +1,7 @@
 package com.example.Contractor.UIController;
 
 import com.example.Contractor.Controller.OrgFormController;
-import com.example.Contractor.DatabaseSetup;
+import com.example.Contractor.ContextSetup;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ExtendWith(DatabaseSetup.class)
+@ExtendWith(ContextSetup.class)
 @AutoConfigureMockMvc
 public class OrgFormUIControllerTest {
 

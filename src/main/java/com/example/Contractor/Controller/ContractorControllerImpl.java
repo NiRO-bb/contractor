@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,9 +76,9 @@ public class ContractorControllerImpl implements ContractorController {
                 return new ResponseEntity<>("Contractor adding/updating was failed.",
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Contractor adding/updating was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Contractor adding/updating was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Contractor adding/updating was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -116,9 +117,9 @@ public class ContractorControllerImpl implements ContractorController {
                         String.format("{ \"id\":\"%s\" }", id));
                 return new ResponseEntity<>("There is no contractor with such ID.", HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Contractor obtaining was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Contractor obtaining was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Contractor obtaining was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -152,9 +153,9 @@ public class ContractorControllerImpl implements ContractorController {
                 return new ResponseEntity<>("Contractor deleting was failed. There is no contractor with such ID.",
                         HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Contractor deleting was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Contractor deleting was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Contractor deleting was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -194,9 +195,9 @@ public class ContractorControllerImpl implements ContractorController {
                 LOGGER.info("Contractor list not obtained { \"count\":0 }");
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Contractor searching was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Contractor searching was failed.");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Contractor searching was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 

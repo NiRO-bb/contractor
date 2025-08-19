@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env_prod
+    volumes:
+      - contractor_postgres_data:/var/lib/postgresql/data
+    networks:
+      - rabbit-system
+
+  consumer:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
+    env_file:
+      - .env_prod
+    networks:
+      - rabbit-system
+
+volumes:
+  contractor_postgres_data:
+
+networks:
+  rabbit-system:
+    external: true

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,9 +68,9 @@ public class IndustryControllerImpl implements IndustryController {
                 LOGGER.warn("Industry list not obtained { \"count\":0 }");
                 return new ResponseEntity<>("Industry list is empty.", HttpStatus.NO_CONTENT);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Industry list obtaining was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Industry list obtaining was failed");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Industry list obtaining was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -104,9 +105,9 @@ public class IndustryControllerImpl implements IndustryController {
                 LOGGER.info("Industry not obtained {}; There is no Industry with such id", String.format(" \"id\":\"%s\" ", id));
                 return new ResponseEntity<>("There is no Industry with such id.", HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Industry obtaining was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Industry obtaining was failed");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Industry obtaining was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -139,9 +140,9 @@ public class IndustryControllerImpl implements IndustryController {
                 LOGGER.error("Industry not added {}", industry.desc());
                 return new ResponseEntity<>("Industry adding/updating was failed.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Industry adding was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Industry adding/updating was failed");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Industry adding was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 
@@ -173,9 +174,9 @@ public class IndustryControllerImpl implements IndustryController {
                 LOGGER.warn("Industry not deleted {}; There is no Industry with such id", String.format(" \"id\":\"%s\" ", id));
                 return new ResponseEntity<>("Industry deleting was failed. There is no Industry with such ID.", HttpStatus.NOT_FOUND);
             }
-        } catch (Exception exception) {
-            LOGGER.error("Industry deleting was failed; Error occurred {}", exception.getMessage());
-            throw new RuntimeException("Industry deleting was failed");
+        } catch (DataAccessException exception) {
+            LOGGER.error("Industry deleting was failed - {}", exception.getMessage());
+            throw new DataAccessException(exception.getMessage()) {};
         }
     }
 

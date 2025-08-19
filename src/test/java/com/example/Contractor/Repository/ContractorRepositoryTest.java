@@ -5,7 +5,7 @@ import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.DTO.OrgForm;
-import com.example.Contractor.DatabaseSetup;
+import com.example.Contractor.ContextSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 @SpringBootTest
-@ExtendWith(DatabaseSetup.class)
+@ExtendWith(ContextSetup.class)
 public class ContractorRepositoryTest {
 
     @Autowired
