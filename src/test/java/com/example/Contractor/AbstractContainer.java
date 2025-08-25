@@ -1,27 +1,24 @@
 package com.example.Contractor;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 
-public class ContextSetup implements BeforeAllCallback {
+public abstract class AbstractContainer {
 
-    private RabbitMQContainer rabbitContainer = new RabbitMQContainer("rabbitmq:3-management");
+    private static RabbitMQContainer rabbitContainer = new RabbitMQContainer("rabbitmq:3-management");
 
-    private PostgreSQLContainer<?> psqlContainer = new PostgreSQLContainer<>("postgres:latest")
+    private static PostgreSQLContainer<?> psqlContainer = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("testDatabase")
             .withUsername("testUser")
             .withPassword("testPass");
 
-    @Override
-    public void beforeAll(ExtensionContext context) {
+    static {
         rabbitContainer.start();
         psqlContainer.start();
         updateProperties();
     }
 
-    private void updateProperties() {
+    private static void updateProperties() {
         System.setProperty("spring.datasource.url", psqlContainer.getJdbcUrl());
         System.setProperty("spring.datasource.username", psqlContainer.getUsername());
         System.setProperty("spring.datasource.password", psqlContainer.getPassword());

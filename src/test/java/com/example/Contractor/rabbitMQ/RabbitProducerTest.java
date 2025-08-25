@@ -1,18 +1,16 @@
 package com.example.Contractor.rabbitMQ;
 
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import com.example.Contractor.config.TestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Import(TestConfig.class)
-@ExtendWith(ContextSetup.class)
-public class RabbitProducerTest {
+public class RabbitProducerTest extends AbstractContainer {
 
     private final int sleepTime = 2000;
 
