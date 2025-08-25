@@ -43,6 +43,8 @@ java -cp "target/classes" com.example.Contractor.Utils.RewriterCSV
 * APP_RABBIT_QUEUE
 * APP_SCHEDULE_FIXED_DELAY
 * APP_SCHEDULE_INITIAL_DELAY
+* SPRING_DATA_REDIS_HOST
+* SPRING_DATA_REDIS_PORT
 
 <p>.env_dev - for local development </p>
 <p>.env_prod - for container (docker) development</p>

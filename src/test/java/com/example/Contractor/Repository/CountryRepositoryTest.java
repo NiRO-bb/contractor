@@ -1,10 +1,9 @@
 package com.example.Contractor.Repository;
 
 import com.example.Contractor.DTO.Country;
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
-public class CountryRepositoryTest {
+public class CountryRepositoryTest extends AbstractContainer {
 
     @Autowired
     private CountryRepository repository;

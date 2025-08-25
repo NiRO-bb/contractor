@@ -1,16 +1,16 @@
 package com.example.Contractor.outbox;
 
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import com.example.Contractor.Exception.RabbitSendingException;
 import com.example.Contractor.rabbitMQ.RabbitProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
@@ -19,8 +19,8 @@ import java.util.HashMap;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
-public class ScheduleMessageSenderTest {
+@DirtiesContext
+public class ScheduleMessageSenderTest extends AbstractContainer {
 
     @Autowired
     private ScheduleMessageSender sender;

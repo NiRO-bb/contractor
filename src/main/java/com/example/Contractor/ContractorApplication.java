@@ -2,6 +2,7 @@ package com.example.Contractor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * Main project class.
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Contains {@code main} method.
  */
 @SpringBootApplication
+@EnableCaching
 public class ContractorApplication {
 
     /**

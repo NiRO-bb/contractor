@@ -1,26 +1,27 @@
 package com.example.Contractor.service;
 
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import com.example.Contractor.DTO.Contractor;
 import com.example.Contractor.Repository.ContractorRepository;
 import com.example.Contractor.Service.ContractorService;
 import com.example.Contractor.Service.OutboxService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
-public class ContractorServiceTest {
+@DirtiesContext
+public class ContractorServiceTest extends AbstractContainer {
 
     @Autowired
     private ContractorService service;
@@ -30,6 +31,15 @@ public class ContractorServiceTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @BeforeAll
+    public static void setup(@Autowired NamedParameterJdbcTemplate jdbcTemplate) {
+        String sql = """
+                DELETE
+                FROM outbox;
+                """;
+        jdbcTemplate.update(sql, new HashMap<>());
+    }
 
     @Test
     public void testTransactionalSuccess() {

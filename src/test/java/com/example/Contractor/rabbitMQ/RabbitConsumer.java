@@ -1,5 +1,6 @@
 package com.example.Contractor.rabbitMQ;
 
+import com.example.Contractor.AbstractContainer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -11,12 +12,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class RabbitConsumer {
+public class RabbitConsumer extends AbstractContainer {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
     @Getter
-    private String receivedMessage;
+    private static String receivedMessage;
 
     @Value("${app.rabbit.queue}")
     private String queue;
@@ -24,10 +25,9 @@ public class RabbitConsumer {
     @Value("${app.rabbit.exchange}")
     private String exchange;
 
-    public RabbitConsumer(@Value("${app.rabbit.host}") String host,
-                          @Value("${app.rabbit.port}") int port) {
-        factory.setHost(host);
-        factory.setPort(port);
+    public RabbitConsumer() {
+        factory.setHost(System.getProperty("app.rabbit.host"));
+        factory.setPort(Integer.parseInt(System.getProperty("app.rabbit.port")));
     }
 
     public void consume() throws Exception {
