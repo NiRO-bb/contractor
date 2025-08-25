@@ -10,7 +10,14 @@ services:
     networks:
       - rabbit-system
 
-  consumer:
+  redis:
+    image: redis
+    ports:
+      - "6380:6379"
+    networks:
+      - rabbit-system
+
+  contractor:
     build: .
     ports:
       - "8080:8080"
