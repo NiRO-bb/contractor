@@ -17,7 +17,7 @@ public class RabbitConsumer extends AbstractContainer {
     private final ConnectionFactory factory = new ConnectionFactory();
 
     @Getter
-    private String receivedMessage;
+    private static String receivedMessage;
 
     @Value("${app.rabbit.queue}")
     private String queue;

@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Import;
 @Import(TestConfig.class)
 public class RabbitProducerTest extends AbstractContainer {
 
-    private final int sleepTime = 2000;
-
     @Autowired
     private RabbitProducer producer;
 
@@ -24,8 +22,7 @@ public class RabbitProducerTest extends AbstractContainer {
     public void testSend() throws Exception {
         String message = "test";
         Assertions.assertTrue(producer.send(message));
-        Thread.sleep(sleepTime);
-        Assertions.assertEquals(message, consumer.getReceivedMessage());
+        Assertions.assertEquals(message, RabbitConsumer.getReceivedMessage());
     }
 
 }

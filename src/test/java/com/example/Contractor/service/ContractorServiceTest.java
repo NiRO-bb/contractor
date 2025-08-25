@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
 @SpringBootTest
+@DirtiesContext
 public class ContractorServiceTest extends AbstractContainer {
 
     @Autowired

@@ -1,20 +1,29 @@
 package com.example.Contractor;
 
+import com.redis.testcontainers.RedisContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 
 public abstract class AbstractContainer {
 
-    private static RabbitMQContainer rabbitContainer = new RabbitMQContainer("rabbitmq:3-management");
+    private static RedisContainer redisContainer;
 
-    private static PostgreSQLContainer<?> psqlContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("testDatabase")
-            .withUsername("testUser")
-            .withPassword("testPass");
+    private static RabbitMQContainer rabbitContainer;
+
+    private static PostgreSQLContainer<?> psqlContainer;
 
     static {
+        redisContainer = new RedisContainer("redis:latest");
+        rabbitContainer = new RabbitMQContainer("rabbitmq:3-management");
+        psqlContainer = new PostgreSQLContainer<>("postgres:latest")
+                .withDatabaseName("testDatabase")
+                .withUsername("testUser")
+                .withPassword("testPass");
+
+        redisContainer.start();
         rabbitContainer.start();
         psqlContainer.start();
+
         updateProperties();
     }
 
@@ -29,6 +38,8 @@ public abstract class AbstractContainer {
         System.setProperty("app.rabbit.queue", "test_queue");
         System.setProperty("app.schedule.fixedDelay", "1000");
         System.setProperty("app.schedule.initialDelay", "1000");
+        System.setProperty("spring.data.redis.host", redisContainer.getHost());
+        System.setProperty("spring.data.redis.port", redisContainer.getMappedPort(6379).toString());
     }
 
 }

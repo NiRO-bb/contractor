@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
+@DirtiesContext
 public class ScheduleMessageSenderTest extends AbstractContainer {
 
     @Autowired
