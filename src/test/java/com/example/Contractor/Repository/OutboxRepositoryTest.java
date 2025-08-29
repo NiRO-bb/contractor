@@ -1,11 +1,10 @@
 package com.example.Contractor.Repository;
 
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import com.example.Contractor.DTO.OutboxMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,8 +13,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
-public class OutboxRepositoryTest {
+public class OutboxRepositoryTest extends AbstractContainer {
 
     @Autowired
     private OutboxRepository repository;

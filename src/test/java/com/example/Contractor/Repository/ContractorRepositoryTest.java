@@ -5,11 +5,10 @@ import com.example.Contractor.DTO.ContractorSearch;
 import com.example.Contractor.DTO.Country;
 import com.example.Contractor.DTO.Industry;
 import com.example.Contractor.DTO.OrgForm;
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
-public class ContractorRepositoryTest {
+public class ContractorRepositoryTest extends AbstractContainer {
 
     @Autowired
     private ContractorRepository repository;

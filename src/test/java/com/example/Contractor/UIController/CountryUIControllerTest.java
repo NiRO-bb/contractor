@@ -1,9 +1,8 @@
 package com.example.Contractor.UIController;
 
 import com.example.Contractor.Controller.CountryController;
-import com.example.Contractor.ContextSetup;
+import com.example.Contractor.AbstractContainer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
-@ExtendWith(ContextSetup.class)
 @AutoConfigureMockMvc
-public class CountryUIControllerTest {
+public class CountryUIControllerTest extends AbstractContainer {
 
     @MockitoBean
     private CountryController countryController;
